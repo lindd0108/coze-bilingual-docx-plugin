@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: bilingual-docx-plugin
+    runtime: python
+    rootDir: bilingual_docx_plugin
+    buildCommand: pip install -r requirements.txt
+    startCommand: python stdlib_server.py
+    plan: free
+    autoDeploy: true

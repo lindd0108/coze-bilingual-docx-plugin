@@ -1,0 +1,101 @@
+openapi: 3.0.3
+info:
+  title: Bilingual DOCX Generator
+  version: 1.0.0
+  description: Generate Word documents with Chinese-English two-column comparison tables.
+servers:
+  - url: https://your-domain.example.com
+paths:
+  /create_bilingual_docx:
+    post:
+      operationId: create_bilingual_docx
+      summary: Create a bilingual DOCX document
+      description: Receives structured Chinese-English paragraph rows and returns a DOCX download URL.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateDocxRequest"
+      responses:
+        "200":
+          description: DOCX created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateDocxResponse"
+        "400":
+          description: Invalid request
+components:
+  schemas:
+    BilingualRow:
+      type: object
+      required:
+        - source
+        - target
+      properties:
+        source:
+          type: string
+          description: Chinese source paragraph.
+        target:
+          type: string
+          description: English translation paragraph.
+    TermRow:
+      type: object
+      required:
+        - term
+        - translation
+      properties:
+        term:
+          type: string
+          description: Chinese term.
+        translation:
+          type: string
+          description: Recommended English translation.
+        note:
+          type: string
+          description: Term note or source.
+    CreateDocxRequest:
+      type: object
+      required:
+        - title
+        - rows
+      properties:
+        title:
+          type: string
+          description: Document title.
+        rows:
+          type: array
+          description: Bilingual paragraph rows. Each item corresponds to one source paragraph and its English translation.
+          items:
+            $ref: "#/components/schemas/BilingualRow"
+        terms:
+          type: array
+          description: Optional terminology notes.
+          items:
+            $ref: "#/components/schemas/TermRow"
+        risks:
+          type: array
+          description: Optional risk or review notes.
+          items:
+            type: string
+    CreateDocxResponse:
+      type: object
+      required:
+        - file_url
+        - file_name
+        - row_count
+        - message
+      properties:
+        file_url:
+          type: string
+          description: Download URL of generated DOCX file.
+        file_name:
+          type: string
+          description: Generated DOCX file name.
+        row_count:
+          type: integer
+          description: Number of bilingual rows in the document.
+        message:
+          type: string
+          description: Status message.

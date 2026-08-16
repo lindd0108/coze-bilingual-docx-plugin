@@ -1,0 +1,7 @@
+.codex_*
+.node_repl_alive.txt
+.sky_state_summary.json
+bilingual_docx_plugin/generated/
+bilingual_docx_plugin/__pycache__/
+bilingual_docx_plugin/.server_pid
+*.pyc
