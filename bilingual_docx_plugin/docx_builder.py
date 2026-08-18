@@ -52,11 +52,31 @@ def normalize_rows(rows: Any) -> List[Dict[str, str]]:
     return normalized
 
 
+def normalize_decision_logs(logs: Any) -> List[Dict[str, str]]:
+    if not isinstance(logs, list):
+        return []
+    normalized = []
+    for item in logs:
+        if not isinstance(item, dict):
+            continue
+        log = {
+            "item": str(item.get("item", "")).strip(),
+            "decision": str(item.get("decision", "")).strip(),
+            "reason": str(item.get("reason", "")).strip(),
+            "memory": str(item.get("memory", "")).strip(),
+            "review": str(item.get("review", "")).strip(),
+        }
+        if any(log.values()):
+            normalized.append(log)
+    return normalized
+
+
 def build_docx(payload: Dict[str, Any], output_dir: Path) -> Dict[str, Any]:
     title = str(payload.get("title", "")).strip()
     rows = normalize_rows(payload.get("rows"))
     terms = payload.get("terms") if isinstance(payload.get("terms"), list) else []
     risks = payload.get("risks") if isinstance(payload.get("risks"), list) else []
+    decision_logs = normalize_decision_logs(payload.get("decision_logs"))
 
     if not title:
         raise ValueError("title is required")
@@ -117,6 +137,21 @@ def build_docx(payload: Dict[str, Any], output_dir: Path) -> Dict[str, Any]:
             risk_text = str(risk).strip()
             if risk_text:
                 document.add_paragraph(risk_text)
+
+    if decision_logs:
+        document.add_heading("译者决策日志", level=2)
+        log_table = document.add_table(rows=1, cols=5)
+        log_table.style = "Table Grid"
+        headers = ["项目", "决策", "理由", "是否写入项目记忆", "是否需复核"]
+        for cell, text in zip(log_table.rows[0].cells, headers):
+            set_cell_text(cell, text, "SimSun", bold=True)
+        for log in decision_logs:
+            cells = log_table.add_row().cells
+            add_paragraph_text(cells[0], log["item"], "SimSun", font_size=9)
+            add_paragraph_text(cells[1], log["decision"], "SimSun", font_size=9)
+            add_paragraph_text(cells[2], log["reason"], "SimSun", font_size=9)
+            add_paragraph_text(cells[3], log["memory"], "SimSun", font_size=9)
+            add_paragraph_text(cells[4], log["review"], "SimSun", font_size=9)
 
     document.save(output_path)
     return {

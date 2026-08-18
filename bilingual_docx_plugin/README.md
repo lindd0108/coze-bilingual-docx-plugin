@@ -26,7 +26,16 @@
       "note": "首次出现可补充 style name Zimei"
     }
   ],
-  "risks": ["杜预官爵译法需复核"]
+  "risks": ["杜预官爵译法需复核"],
+  "decision_logs": [
+    {
+      "item": "字子美",
+      "decision": "首次出现译为 style name Zimei",
+      "reason": "向英语学术读者说明“字”的称谓功能",
+      "memory": "建议写入项目记忆",
+      "review": "否"
+    }
+  ]
 }
 ```
 
@@ -77,7 +86,9 @@ Coze 基于 API 创建插件时，插件 URL 必须是域名，不能是 IP。�
    - `file_name`: String
    - `row_count`: Integer
    - `message`: String
-7. 试运行成功后发布插件，再添加到“诗史译衡”智能体。
+7. 输入参数补充：
+   - `decision_logs`: Array<Object>，选填。子字段包括 `item`、`decision`、`reason`、`memory`、`review`。
+8. 试运行成功后发布插件，再添加到“诗史译衡”智能体。
 
 ## 智能体调用要求
 
@@ -88,5 +99,6 @@ Coze 基于 API 创建插件时，插件 URL 必须是域名，不能是 IP。�
 rows 中每个元素对应一个自然段：
 - source: 中文原文
 - target: 英文译文
+decision_logs 用于写入“译者决策日志”表格。
 不得把 Markdown 表格传给插件。
 ```

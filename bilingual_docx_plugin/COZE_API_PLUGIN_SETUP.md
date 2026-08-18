@@ -88,6 +88,15 @@ Body JSON：
   ],
   "risks": [
     "专名译法需与全书保持一致"
+  ],
+  "decision_logs": [
+    {
+      "item": "字子美",
+      "decision": "首次出现译为 style name Zimei",
+      "reason": "向英语学术读者说明“字”的称谓功能",
+      "memory": "建议写入项目记忆",
+      "review": "否"
+    }
   ]
 }
 ```
@@ -99,6 +108,7 @@ title   String          必填
 rows    Array<Object>   必填
 terms   Array<Object>   选填
 risks   Array<String>   选填
+decision_logs Array<Object> 选填
 ```
 
 rows 子字段：
@@ -114,6 +124,16 @@ terms 子字段：
 term         String  中文术语
 translation  String  推荐英译
 note         String  说明
+```
+
+decision_logs 子字段：
+
+```text
+item      String  决策对象、术语或片段
+decision  String  采用的译法或处理决定
+reason    String  决策理由
+memory    String  是否写入项目记忆
+review    String  是否需要后续复核
 ```
 
 ## 4. 输出参数
@@ -134,6 +154,7 @@ message     String   生成状态
 - rows: 中英对照段落数组，每项包含 source 和 target
 - terms: 可选，术语说明
 - risks: 可选，风险提示
+- decision_logs: 可选，译者决策日志
 
 工具返回 file_url 后，应直接回复用户下载链接，并说明该文档为左右两列中英对照 Word 文档。
 ```

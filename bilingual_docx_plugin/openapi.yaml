@@ -4,7 +4,7 @@ info:
   version: 1.0.0
   description: Generate Word documents with Chinese-English two-column comparison tables.
 servers:
-  - url: https://your-domain.example.com
+  - url: https://coze-bilingual-docx-plugin.onrender.com
 paths:
   /create_bilingual_docx:
     post:
@@ -55,6 +55,24 @@ components:
         note:
           type: string
           description: Term note or source.
+    DecisionLogRow:
+      type: object
+      properties:
+        item:
+          type: string
+          description: Translation item, term, risk, or passage that required a decision.
+        decision:
+          type: string
+          description: Final or provisional translator decision.
+        reason:
+          type: string
+          description: Rationale for the decision.
+        memory:
+          type: string
+          description: Whether this decision should be written into project memory.
+        review:
+          type: string
+          description: Whether this decision still requires later review.
     CreateDocxRequest:
       type: object
       required:
@@ -79,6 +97,11 @@ components:
           description: Optional risk or review notes.
           items:
             type: string
+        decision_logs:
+          type: array
+          description: Optional translator decision log rows.
+          items:
+            $ref: "#/components/schemas/DecisionLogRow"
     CreateDocxResponse:
       type: object
       required:
